@@ -1,4 +1,4 @@
 {
     "appPort": 3000,
-    "storagePath": "./lol"
+    "storagePath": "./files"
 }

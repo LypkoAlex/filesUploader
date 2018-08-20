@@ -41,6 +41,8 @@ function messageHandler(message) {
         if (type === 'INFO') console.log(`INFO: ${data.msg}`);
         if (type === 'FINISH') {
             statuses[data.file].bar.interrupt(`MD5 HASH for ${data.file} => ${data.hash}`);
+            if (Object.keys(statuses).length === 1) process.stdout.clearLine();
+            delete statuses[data.file];
         }
         if (type === 'STATUS') {
             if (!statuses[data.file]) {
