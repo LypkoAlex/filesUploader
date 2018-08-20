@@ -61,7 +61,4 @@ function messageHandler(message) {
     }
 }
 
-function initSession(connection) {
-    connection.send('HELLO');
-}
 client.connect(`ws://${argv.host}:${argv.port}/`);

@@ -21,13 +21,14 @@ const bar = multi.newBar(` Uploading ${file} [:bar] :percent`, {
 
 let status = 0;
 
-const statusHandler = (fileStatus) => {
-    fileStatus = parseInt(fileStatus);
-    if (status < fileStatus) {
-        bar.tick(fileStatus - status);
-        status = fileStatus;
+function statusHandler(fileStatus) {
+    const currentStatus = parseInt(fileStatus);
+
+    if (status < currentStatus) {
+        bar.tick(currentStatus - status);
+        status = currentStatus;
     }
-};
+}
 
 const FileUploader = require('./lib/FileUploader.js');
 
@@ -35,7 +36,7 @@ async function main() {
     const uploader = new FileUploader({
         url : `http://${host}:${port}/file/${session}`,
         filePath : file,
-        statusHandler : (s) => statusHandler(s)
+        statusHandler : (result) => statusHandler(result)
     });
 
     await uploader.upload();
