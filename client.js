@@ -8,60 +8,37 @@ const { file, port, host, session } = require('optimist')
     .alias('s', 'session')
     .argv
 ;
-const fs = require('fs');
-const request = require('request');
-const qs = require('querystring');
-const util = require('util');
-const stat = util.promisify(fs.stat);
 
-let data = '';
-const chunkSize = 8
+const Multiprogress = require('multi-progress');
+const multi = new Multiprogress(process.stderr);
 
-//let readStream = fs.createReadStream('file.txt', { highWaterMark : chunkSize });
+const bar = multi.newBar(` Uploading ${file} [:bar] :percent`, {
+  complete: '=',
+  incomplete: ' ',
+  width: 30,
+  total:  100
+});
 
-//readStream.on('data', function(chunk) {
-      //data += chunk;
-      //readStream.pause()
-      //request({
-        //headers: {
-          //'Content-Type': 'application/octet-stream'
-        //},
-        //url : 'http://localhost:3000/file',
-        //method : 'POST',
-        //body : chunk,
-        //encoding: null
-      //}, () => {
-      //readStream.resume()
-      //})
-//}).on('end', function() {
-//})
+let status = 0;
 
-async function main() {
-  const { size } = await stat(file);
-  console.log(size)
-  let readStream = fs.createReadStream(file, { highWaterMark : chunkSize });
-
-  readStream.on('data', function(chunk) {
-      console.log('lol')
-      data += chunk;
-      readStream.pause()
-      const query = {
-        fileSize : size,
-        chunkSize
-      }
-      request({
-        headers: {
-          'Content-Type': 'application/octet-stream'
-        },
-        url : `http://${host}:${port}/file/${session}/${file}` +'?' + qs.stringify(query),
-        method : 'POST',
-        body : chunk,
-        encoding: null
-      }, () => {
-      readStream.resume()
-      })
-}).on('end', function() {
-})
+const statusHandler = (fileStatus) => {
+  fileStatus = parseInt(fileStatus)
+  if (status < fileStatus) {
+    bar.tick(fileStatus - status);
+    status = fileStatus
+  }
 }
 
-main()
+const FileUploader = require('./lib/FileUploader.js');
+
+async function main() {
+  const uploader = new FileUploader({
+    url : `http://${host}:${port}/file/${session}`,
+    filePath : file,
+    statusHandler : (s) => statusHandler(s)
+  });
+
+  await uploader.upload();
+}
+
+main().catch(console.log)
