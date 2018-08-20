@@ -1,4 +1,10 @@
 {
-    "appPort": 3000,
-    "storagePath": "./files"
+    "test" : {
+        "appPort": 8080,
+        "storagePath": "./tests"
+    },
+    "live" : {
+        "appPort": 3000,
+        "storagePath": "./files"
+    }
 }

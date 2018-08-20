@@ -10,6 +10,7 @@ const { file, port, host, session } = require('optimist')
 ;
 
 const Multiprogress = require('multi-progress');
+const FileUploader = require('./lib/FileUploader.js');
 const multi = new Multiprogress(process.stderr);
 
 const bar = multi.newBar(` Uploading ${file} [:bar] :percent`, {
@@ -30,7 +31,6 @@ function statusHandler(fileStatus) {
     }
 }
 
-const FileUploader = require('./lib/FileUploader.js');
 
 async function main() {
     const uploader = new FileUploader({
