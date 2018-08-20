@@ -24,6 +24,11 @@ $ node watcher.js -h localhost -p 3000 -s <session-id>
 
 If you will upload more than one file on one time it will be working :)
 
+### Test
+```sh
+$ npm run test
+```
+
 ### Application structure
 ```
 server.js
