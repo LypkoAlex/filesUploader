@@ -1,6 +1,7 @@
 const express     = require('express');
 const bodyParser  = require('body-parser');
 
+const { appPort }   = require('./etc/config.json');
 const promiseRouter = require('./lib/PromiseRouter.js');
 const getRoutes     = require('./lib/routers');
 const routes        = getRoutes();
@@ -18,6 +19,6 @@ router.postAsync('/file/:sessionId/:fileName', routes.files.upload.bind(routes.f
 
 router.ws('/', watcher.handler);
 
-app.listen(3000, function () {
-    console.log('Example app listening on port 3000!');
+app.listen(appPort, function () {
+    console.log(`listening on port ${appPort}`);
 });

@@ -53,9 +53,10 @@ function messageHandler(message) {
                 status : 0
                 };
             }
-            if (statuses[data.file].status < parseInt(data.status)) {
-                statuses[data.file].bar.tick(parseInt(data.status) - statuses[data.file].status);
-                statuses[data.file].status = parseInt(data.status);
+            const fileStatus = parseInt(data.status);
+            if (statuses[data.file].status < fileStatus) {
+                statuses[data.file].bar.tick(fileStatus - statuses[data.file].status);
+                statuses[data.file].status = fileStatus;
             }
         }
     }
